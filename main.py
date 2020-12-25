@@ -341,11 +341,95 @@ if __name__ == "__main__":
             links = get_product_links()
             for link in links:
                 print(link)
+                html = requests.get(link).text
+                bs = BeautifulSoup(html, "html.parser")
 
+                ref_code = generate_product_ref()
+                name = get_name()
+                description = get_description()
+                price = get_price()
+                discount = get_discount()
+                art = get_art()
+                available = if_available()
+                height = get_height()
+                length = get_length()
+                width = get_width()
+                weight = get_weight()
+                material = get_material()
+                volume = get_volume()
+                power_consumption = get_power_consumption()
+                dishwasher = get_dishwasher()
+                oven = get_oven()
+                diameter = get_diameter()
+                pictures = get_pics()
+                old_price = get_old_price()
+                discount = get_discount()
+                quantity = get_quantity()
                 variants = get_variations()
+                color = None
+
+                if height is None:
+                    h = "2"
+                else:
+                    h = height
+                if length is None:
+                    l = "2"
+                else:
+                    l = length
+                if width is None:
+                    w = "2"
+                else:
+                    w = width
+
+                dimensions = f"{l}x{h}x{w}"
+
+                if quantity is None:
+                    quantity = "1"
+
+                parameters = dict(
+                    volume=volume,
+                    diameter=diameter,
+                    oven=oven,
+                    dishwasher=dishwasher,
+                    material=material,
+                    quantity=quantity
+                )
+
+                result = dict(
+                    shop_id=shop_id,
+                    available=available,
+                    timestamp=round(datetime.datetime.now().timestamp()),
+                    cat_id=category["cat_id"],
+                    url=link,
+                    name=name,
+                    art=art,
+                    product_ref=ref_code,
+                    price=price,
+                    currency=currency,
+                    description=description,
+                    parameters=parameters,
+                    height=height,
+                    length=length,
+                    width=width,
+                    dimensions=dimensions,
+                    pictures=pictures,
+                    img_main=pictures["pics_all"][0],
+                    img_additional=pictures["pics_all"][1:],
+                    img_main_url=pictures["pics_all"][0],
+                    img_additional_url=pictures["pics_all"][1:],
+                    language=language,
+                    additional_attrs=None,
+                    power_consumption=power_consumption,
+                    weight=weight,
+                    old_price=old_price,
+                    discount=discount,
+                    color=color
+                )
+
                 ref_code = generate_product_ref()
                 if len(variants) > 0:
                     for variant in variants:
+                        link = variant
 
                         html = requests.get(link).text
                         bs = BeautifulSoup(html, "html.parser")
@@ -433,90 +517,6 @@ if __name__ == "__main__":
 
                         results.append(result)
                 else:
-                    html = requests.get(link).text
-                    bs = BeautifulSoup(html, "html.parser")
-
-                    ref_code = generate_product_ref()
-                    name = get_name()
-                    description = get_description()
-                    price = get_price()
-                    discount = get_discount()
-                    art = get_art()
-                    available = if_available()
-                    height = get_height()
-                    length = get_length()
-                    width = get_width()
-                    weight = get_weight()
-                    material = get_material()
-                    volume = get_volume()
-                    power_consumption = get_power_consumption()
-                    dishwasher = get_dishwasher()
-                    oven = get_oven()
-                    diameter = get_diameter()
-                    pictures = get_pics()
-                    old_price = get_old_price()
-                    discount = get_discount()
-                    quantity = get_quantity()
-                    color = None
-
-                    if height is None:
-                        h = "2"
-                    else:
-                        h = height
-                    if length is None:
-                        l = "2"
-                    else:
-                        l = length
-                    if width is None:
-                        w = "2"
-                    else:
-                        w = width
-
-                    dimensions = f"{l}x{h}x{w}"
-
-                    if quantity is None:
-                        quantity = "1"
-
-                    parameters = dict(
-                        volume=volume,
-                        diameter=diameter,
-                        oven=oven,
-                        dishwasher=dishwasher,
-                        material=material,
-                        quantity=quantity
-                    )
-
-                    result = dict(
-                        shop_id=shop_id,
-                        available=available,
-                        timestamp=round(datetime.datetime.now().timestamp()),
-                        cat_id=category["cat_id"],
-                        url=link,
-                        name=name,
-                        art=art,
-                        product_ref=ref_code,
-                        price=price,
-                        currency=currency,
-                        description=description,
-                        parameters=parameters,
-                        height=height,
-                        length=length,
-                        width=width,
-                        dimensions=dimensions,
-                        pictures=pictures,
-                        img_main=pictures["pics_all"][0],
-                        img_additional=pictures["pics_all"][1:],
-                        img_main_url=pictures["pics_all"][0],
-                        img_additional_url=pictures["pics_all"][1:],
-                        language=language,
-                        additional_attrs=None,
-                        power_consumption=power_consumption,
-                        weight=weight,
-                        old_price=old_price,
-                        discount=discount,
-                        color=color
-                    )
-
                     results.append(result)
 
         except AttributeError:
