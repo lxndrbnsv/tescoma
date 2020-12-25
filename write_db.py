@@ -31,10 +31,10 @@ class WriteProducts:
                               "length, height, width, volume, images, " \
                               "img_main, img_additional,  " \
                               "category, attr_other, " \
-                              "image_main_url, image_additional_url, pwr) " \
+                              "image_main_url, image_additional_url, pwr, weight, old_price, discount, color) " \
                               "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s," \
                               "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, " \
-                              "%s, %s, %s, %s)"
+                              "%s, %s, %s, %s, %s, %s, %s, %s)"
 
                         cursor.execute(
                             sql, (
@@ -53,7 +53,7 @@ class WriteProducts:
                                     r["img_additional"]
                                 ), r["cat_id"], str(r["parameters"]),
                                 r["img_main_url"],
-                                ", ".join(r["img_additional_url"]), r["power_consumption"]
+                                ", ".join(r["img_additional_url"]), r["power_consumption"], r["weight"], r["old_price"], r["discount"], r["color"]
                             ),
                         )
                         connection.commit()
