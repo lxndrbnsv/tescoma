@@ -316,10 +316,10 @@ def get_variations():
     variants = []
     variants_div = bs.find("div", {"class": "variants"})
     if variants_div is not None:
-        for input in variants_div.find_all("input"):
+        for input_tag in variants_div.find_all("input"):
             try:
-                if f"https://eshop.tescoma.cz{input.attrs['data-url']}" not in variants:
-                    variants.append(f"https://eshop.tescoma.cz{input.attrs['data-url']}")
+                if f"https://eshop.tescoma.cz{input_tag.attrs['data-url']}" not in variants:
+                    variants.append(f"https://eshop.tescoma.cz{input_tag.attrs['data-url']}")
             except AttributeError:
                 pass
     return variants
