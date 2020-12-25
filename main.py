@@ -426,7 +426,6 @@ if __name__ == "__main__":
                     color=color
                 )
 
-                ref_code = generate_product_ref()
                 if len(variants) > 0:
                     for variant in variants:
                         link = variant
