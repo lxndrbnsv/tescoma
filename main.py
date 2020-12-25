@@ -6,6 +6,8 @@ import datetime
 import requests
 from bs4 import BeautifulSoup
 
+from write_db import WriteProducts
+
 
 def generate_product_ref():
     def generate():
@@ -266,6 +268,21 @@ if __name__ == "__main__":
                 diameter = get_diameter()
                 pictures = get_pics()
 
+                if height is None:
+                    h = "2"
+                else:
+                    h = height
+                if length is None:
+                    l = "2"
+                else:
+                    l = length
+                if width is None:
+                    w = "2"
+                else:
+                    w = width
+
+                dimensions =  f"{l}x{h}x{w}"
+
                 parameters = dict(
                     volume=volume,
                     diameter=diameter,
@@ -290,6 +307,7 @@ if __name__ == "__main__":
                         height=height,
                         length=length,
                         width=width,
+                        dimensions=dimensions,
                         pictures=pictures,
                         img_main=pictures["pics_all"][0],
                         img_additional=pictures["pics_all"][1:],
@@ -306,3 +324,4 @@ if __name__ == "__main__":
             print("AE!")
 
         print("--- --- ---")
+    WriteProducts(results)
