@@ -1,3 +1,4 @@
+import sys
 import json
 import string
 import random
@@ -8,6 +9,9 @@ from bs4 import BeautifulSoup
 
 from write_db import WriteProducts
 
+
+sys.stdout = open("logs.log", "w")
+sys.stderr = open("logs.log", "w")
 
 def generate_product_ref():
     def generate():
