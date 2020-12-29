@@ -267,6 +267,34 @@ def get_weight():
         return None
 
 
+def get_fridge():
+    try:
+        for strong in bs.find_all("strong", {"class": "parameter-label"}):
+            if "Vhodné do lednice" in strong.get_text():
+                return (
+                    strong.find_next_sibling("span")
+                    .find("span")
+                    .get_text()
+                    .strip()
+                )
+    except AttributeError:
+        return None
+
+
+def get_slip():
+    try:
+        for strong in bs.find_all("strong", {"class": "parameter-label"}):
+            if "Protiskluzová úprava" in strong.get_text():
+                return (
+                    strong.find_next_sibling("span")
+                    .find("span")
+                    .get_text()
+                    .strip()
+                )
+    except AttributeError:
+        return None
+
+
 def get_quantity():
     try:
         for strong in bs.find_all("strong", {"class": "parameter-label"}):
@@ -306,13 +334,6 @@ def get_pics():
         pics.append(f"http://3.127.139.108/api/images/{shop_id}/{pic}.jpg")
 
     return {"pics_all": pics, "pic_names": pic_names}
-
-
-def get_color():
-    try:
-        return bs.find("h1").get_text().split(", ", 1)[1]
-    except IndexError:
-        return None
 
 
 def get_variations():
@@ -368,12 +389,14 @@ if __name__ == "__main__":
                 length = get_length()
                 width = get_width()
                 weight = get_weight()
+                fridge = get_fridge()
                 material = get_material()
                 volume = get_volume()
                 power_consumption = get_power_consumption()
                 dishwasher = get_dishwasher()
                 oven = get_oven()
                 diameter = get_diameter()
+                anti_slip = get_slip()
                 pictures = get_pics()
                 old_price = get_old_price()
                 discount = get_discount()
@@ -406,6 +429,8 @@ if __name__ == "__main__":
                     dishwasher=dishwasher,
                     material=material,
                     quantity=quantity,
+                    fridge=fridge,
+                    anti_slip=anti_slip
                 )
 
                 result = dict(
