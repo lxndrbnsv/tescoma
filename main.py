@@ -103,9 +103,12 @@ def get_discount():
 def get_old_price():
     try:
         old_price_tag = bs.find("span", text="Původní cena vč. DPH:")
-        old_price = old_price_tag.find_next_sibling("span").get_text().replace(
-            "Kč", ""
-        ).strip()
+        old_price = (
+            old_price_tag.find_next_sibling("span")
+            .get_text()
+            .replace("Kč", "")
+            .strip()
+        )
     except AttributeError:
         old_price = None
 
@@ -314,12 +317,22 @@ def get_color():
 
 def get_variations():
     variants = []
-    variants_div = bs.find("div", {"class": "variants"})
+    variants_div = bs.find("ul", {"class": "variants"})
     if variants_div is not None:
         for input_tag in variants_div.find_all("input"):
             try:
-                if f"https://eshop.tescoma.cz{input_tag.attrs['data-url']}" not in variants:
-                    variants.append(f"https://eshop.tescoma.cz{input_tag.attrs['data-url']}")
+                if (
+                    f"https://eshop.tescoma.cz{input_tag.attrs['data-url']}"
+                    not in variants
+                ):
+                    variants.append(
+                        dict(
+                            link=f"https://eshop.tescoma.cz{input_tag.attrs['data-url']}",
+                            color=input_tag.find_parent("li")
+                            .find("img")
+                            .attrs["alt"],
+                        )
+                    )
             except AttributeError:
                 pass
     return variants
@@ -392,7 +405,7 @@ if __name__ == "__main__":
                     oven=oven,
                     dishwasher=dishwasher,
                     material=material,
-                    quantity=quantity
+                    quantity=quantity,
                 )
 
                 result = dict(
@@ -423,70 +436,20 @@ if __name__ == "__main__":
                     weight=weight,
                     old_price=old_price,
                     discount=discount,
-                    color=color
+                    color=color,
                 )
 
                 if len(variants) > 0:
                     for variant in variants:
-                        link = variant
-
-                        html = requests.get(link).text
-                        bs = BeautifulSoup(html, "html.parser")
-
-                        ref_code = ref_code
-                        name = get_name()
-                        description = get_description()
-                        price = get_price()
-                        discount = get_discount()
-                        art = get_art()
-                        available = if_available()
-                        height = get_height()
-                        length = get_length()
-                        width = get_width()
-                        weight = get_weight()
-                        material = get_material()
-                        volume = get_volume()
-                        power_consumption = get_power_consumption()
-                        dishwasher = get_dishwasher()
-                        oven = get_oven()
-                        diameter = get_diameter()
-                        pictures = get_pics()
-                        old_price = get_old_price()
-                        discount = get_discount()
-                        quantity = get_quantity()
-                        color = get_color()
-
-                        if height is None:
-                            h = "2"
-                        else:
-                            h = height
-                        if length is None:
-                            l = "2"
-                        else:
-                            l = length
-                        if width is None:
-                            w = "2"
-                        else:
-                            w = width
-
-                        dimensions = f"{l}x{h}x{w}"
-
-                        if quantity is None:
-                            quantity = "1"
-
-                        parameters = dict(
-                            volume=volume,
-                            diameter=diameter,
-                            oven=oven,
-                            dishwasher=dishwasher,
-                            material=material,
-                            quantity=quantity
-                        )
+                        link = variant["link"]
+                        color = variant["color"]
 
                         result = dict(
                             shop_id=shop_id,
                             available=available,
-                            timestamp=round(datetime.datetime.now().timestamp()),
+                            timestamp=round(
+                                datetime.datetime.now().timestamp()
+                            ),
                             cat_id=category["cat_id"],
                             url=link,
                             name=name,
@@ -511,7 +474,7 @@ if __name__ == "__main__":
                             weight=weight,
                             old_price=old_price,
                             discount=discount,
-                            color=color
+                            color=color,
                         )
 
                         results.append(result)
